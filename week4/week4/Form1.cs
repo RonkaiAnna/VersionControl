@@ -14,6 +14,9 @@ namespace week4
 {
     public partial class Form1 : Form
     {
+        Excel.Application xlApp;
+        Excel.Workbook xlWB;
+        Excel.Worksheet xlSheet;
         RealEstateEntities context = new RealEstateEntities();
         List<Flat> Flats;
         public Form1()
