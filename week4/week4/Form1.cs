@@ -38,7 +38,7 @@ namespace week4
                 xlWB = xlApp.Workbooks.Add(Missing.Value);
                 xlSheet = xlWB.ActiveSheet;
 
-                //CreateTable();
+                CreateTable();
 
                 xlApp.Visible = true;
                 xlApp.UserControl = true;
@@ -53,6 +53,25 @@ namespace week4
                 xlWB = null;
                 xlApp = null;
                 
+            }
+        }
+        void CreateTable()
+        {
+            string[] headers = new string[]
+            {
+                "Kód",
+                "Eladó",
+                "Oldal",
+                "Kerület",
+                "Lift",
+                "Szobák száma",
+                "Alapterület (m2)",
+                "Ár (mFt)",
+                "Négyzetméter ár (Ft/m2)"
+            };
+            for (int i = 0; i < headers.Length; i++)
+            {
+                xlSheet.Cells[1,i+1]= headers[i];
             }
         }
     }
