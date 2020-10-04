@@ -24,8 +24,8 @@ namespace week4
             InitializeComponent();
             LoadData();
             CreateExcel();
-            CreateTable();
-            FormatTable();
+            //CreateTable();
+            //FormatTable();
         }
 
         void LoadData()
@@ -40,7 +40,7 @@ namespace week4
                 xlWB = xlApp.Workbooks.Add(Missing.Value);
                 xlSheet = xlWB.ActiveSheet;
 
-                //CreateTable();
+                CreateTable();
 
                 xlApp.Visible = true;
                 xlApp.UserControl = true;
@@ -58,10 +58,12 @@ namespace week4
             }
         }
         string[] headers;
+        object[,] values;
         void CreateTable()
         {
             //string[] headers = new string[]
             headers=new string[]
+
             {
                 "Kód",
                 "Eladó",
@@ -77,8 +79,8 @@ namespace week4
             {
                 xlSheet.Cells[1,i+1]= headers[i];
             }
-            object[,] values = new object[Flats.Count, headers.Length];
-
+            //object[,] values = new object[Flats.Count, headers.Length];
+            values = new object[Flats.Count, headers.Length];
             int counter = 0;
             foreach (Flat f in Flats)
             {
@@ -106,6 +108,7 @@ namespace week4
             xlSheet.get_Range(
                 GetCell(2, 1), 
                 GetCell(1 + values.GetLength(0), values.GetLength(1))).Value2 = values;
+            FormatTable();
             
         }
         string GetCell(int x, int y)
@@ -132,7 +135,15 @@ namespace week4
             headerRange.RowHeight = 40;
             headerRange.Interior.Color = Color.LightBlue;
             headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
-
+            Excel.Range tableRange = xlSheet.get_Range(GetCell(2, 1),
+                GetCell(1 + values.GetLength(0), values.GetLength(1)));
+            tableRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+            Excel.Range firstColumn = xlSheet.get_Range(GetCell(2, 1), GetCell(1 + values.GetLength(0), 1));
+            firstColumn.Font.Bold = true;
+            firstColumn.Interior.Color = Color.LightYellow;
+            Excel.Range lastColumn = xlSheet.get_Range(GetCell(2, values.GetLength(1)), GetCell(1 + values.GetLength(0), values.GetLength(1)));
+            lastColumn.Interior.Color = Color.LightGreen;
+            lastColumn.NumberFormat = "#\\ ##0.00";
         }
     }
 }
