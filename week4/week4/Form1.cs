@@ -24,6 +24,8 @@ namespace week4
             InitializeComponent();
             LoadData();
             CreateExcel();
+            CreateTable();
+            FormatTable();
         }
 
         void LoadData()
@@ -38,7 +40,7 @@ namespace week4
                 xlWB = xlApp.Workbooks.Add(Missing.Value);
                 xlSheet = xlWB.ActiveSheet;
 
-                CreateTable();
+                //CreateTable();
 
                 xlApp.Visible = true;
                 xlApp.UserControl = true;
@@ -55,9 +57,11 @@ namespace week4
                 
             }
         }
+        string[] headers;
         void CreateTable()
         {
-            string[] headers = new string[]
+            //string[] headers = new string[]
+            headers=new string[]
             {
                 "Kód",
                 "Eladó",
@@ -117,6 +121,18 @@ namespace week4
             }
             ExcelCoordinate += x.ToString();
             return ExcelCoordinate;
+        }
+        void FormatTable()
+        {
+            Excel.Range headerRange = xlSheet.get_Range(GetCell(1, 1), GetCell(1, headers.Length));
+            headerRange.Font.Bold = true;
+            headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            headerRange.EntireColumn.AutoFit();
+            headerRange.RowHeight = 40;
+            headerRange.Interior.Color = Color.LightBlue;
+            headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+
         }
     }
 }
