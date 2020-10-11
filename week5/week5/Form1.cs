@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +18,7 @@ namespace week5
         PortfolioEntities context = new PortfolioEntities();
         List<Tick> Ticks;
         List<PortfolioItem> Portfolio = new List<PortfolioItem>();
+        List<decimal> Nyereségek;
         public Form1()
         {
             InitializeComponent();
@@ -23,7 +26,7 @@ namespace week5
             dataGridView1.DataSource = Ticks;
             CreatePortfolio();
 
-            List<decimal> Nyereségek = new List<decimal>();
+            Nyereségek = new List<decimal>();
             int intervalum = 30;
             DateTime kezdőDátum = (from x in Ticks select x.TradingDay).Min();
             DateTime záróDátum = new DateTime(2016, 12, 30);
@@ -65,6 +68,32 @@ namespace week5
                 value += (decimal)last.Price * item.Volume;
             }
             return value;
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = Application.StartupPath;
+            sfd.Filter = "Comma Seperated Values (*.csv)|*.csv";
+            sfd.DefaultExt = "csv";
+            sfd.AddExtension = true;
+            if (sfd.ShowDialog() != DialogResult.OK) return;
+            using (StreamWriter sw = new StreamWriter(sfd.FileName, false, Encoding.UTF8))
+            {
+                sw.Write("Időszak");
+                sw.Write(";");
+                sw.Write("Nyereség");
+                sw.WriteLine();
+                int counter = 0;
+                foreach (var x in Nyereségek)
+                {
+                    sw.Write(counter);
+                    sw.Write(";");
+                    sw.Write(x);
+                    sw.WriteLine();
+                    counter++;
+                }
+            }
         }
     }
 }
