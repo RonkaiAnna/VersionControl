@@ -8,16 +8,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using week06.Entities;
 using week06.MnbserviceReference;
 
 namespace week06
 {
     public partial class Form1 : Form
     {
+        BindingList<RateData> Rates = new BindingList<RateData>();
         public Form1()
         {
             InitializeComponent();
             WebszolgaltatoMeghivas();
+            dataGridView1.DataSource = Rates;
         }
         void WebszolgaltatoMeghivas()
         {
