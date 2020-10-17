@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 using week06.Entities;
 using week06.MnbserviceReference;
 
@@ -21,7 +22,9 @@ namespace week06
             InitializeComponent();
             WebszolgaltatoMeghivas();
             dataGridView1.DataSource = Rates;
+            XMLFeldolgozas();
         }
+        string result;
         void WebszolgaltatoMeghivas()
         {
             var mnbservice = new MNBArfolyamServiceSoapClient();
@@ -34,7 +37,7 @@ namespace week06
             };
 
             var response = mnbservice.GetExchangeRates(request);
-            var result = response.GetExchangeRatesResult;
+            result = response.GetExchangeRatesResult;
             /*SaveFileDialog sfd = new SaveFileDialog();
             sfd.InitialDirectory = Application.StartupPath;
             sfd.DefaultExt = "xml";
@@ -45,6 +48,27 @@ namespace week06
                 sw.Write(result);
             }*/
             //XML vizsgálata
+        }
+
+        void XMLFeldolgozas()
+        {
+            var xml = new XmlDocument();
+            xml.LoadXml(result);
+            foreach (XmlElement element in xml.DocumentElement)
+            {
+                var rate = new RateData();
+                Rates.Add(rate);
+
+                rate.Date = DateTime.Parse(element.GetAttribute("date"));
+                var childElement = (XmlElement)element.ChildNodes[0];
+                rate.Currency = childElement.GetAttribute("curr");
+                var unit = decimal.Parse(childElement.GetAttribute("unit"));
+                var value = decimal.Parse(childElement.InnerText);
+                if (unit!=0)
+                {
+                    rate.Value = value / unit;
+                }
+            }
         }
     }
 }
