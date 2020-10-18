@@ -18,10 +18,44 @@ namespace week06
     public partial class Form1 : Form
     {
         BindingList<RateData> Rates = new BindingList<RateData>();
+        BindingList<string> Currencies = new BindingList<string>();
+       
         public Form1()
         {
             InitializeComponent();
+            comboBox1.DataSource = Currencies;
+            Currencylekerdezes();
             RefreshData();
+        }
+        void Currencylekerdezes()
+        {
+            var mnbservice_c = new MNBArfolyamServiceSoapClient();
+            var request_c = new GetCurrenciesRequestBody() { };
+            var response_c = mnbservice_c.GetCurrencies(request_c);
+            var result_c = response_c.GetCurrenciesResult;
+            /*SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = Application.StartupPath;
+            sfd.DefaultExt = "xml";
+            sfd.AddExtension = true;
+            if (sfd.ShowDialog() != DialogResult.OK) return;
+            using (StreamWriter sw = new StreamWriter(sfd.FileName, false, Encoding.UTF8))
+            {
+                sw.Write(result_c);
+            }*/
+            //XML vizsgálata
+            var xml_c = new XmlDocument();
+            xml_c.LoadXml(result_c);
+            foreach (XmlElement element in xml_c.DocumentElement)
+            {
+                for (int i = 0; i < element.ChildNodes.Count; i++)
+                {
+                    var childElement_c = (XmlElement)element.ChildNodes[i];
+                    string currency = childElement_c.InnerText;
+                    Currencies.Add(currency);
+                }
+                
+            }
+
         }
 
         private void RefreshData()
@@ -70,6 +104,7 @@ namespace week06
 
                 rate.Date = DateTime.Parse(element.GetAttribute("date"));
                 var childElement = (XmlElement)element.ChildNodes[0];
+                if (childElement == null) continue;
                 rate.Currency = childElement.GetAttribute("curr");
                 var unit = decimal.Parse(childElement.GetAttribute("unit"));
                 var value = decimal.Parse(childElement.InnerText);
