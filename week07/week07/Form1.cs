@@ -17,7 +17,7 @@ namespace week07
         List<Person> Population = new List<Person>();
         List<BirthProbablity> BirthProbabilities = new List<BirthProbablity>();
         List<DeatProbability> DeathProbabilities = new List<DeatProbability>();
-        Random rng = new Random(2346);
+        Random rng = new Random(1234);
         public Form1()
         {
             InitializeComponent();
@@ -25,6 +25,21 @@ namespace week07
             BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
             DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
             dataGridView1.DataSource = Population;
+
+            for (int year = 2005; year <= 2024; year++)
+            {
+                for (int i = 0; i < Population.Count; i++)
+                {
+                    //szimuláció magja
+                }
+                int nbrOfMales = (from x in Population
+                                  where x.Gender == Gender.Male && x.IsAlive
+                                  select x).Count();
+                int nbrOfFemales = (from x in Population
+                                    where x.Gender == Gender.Female && x.IsAlive
+                                    select x).Count();
+                Console.WriteLine(string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+            }
 
         }
 
