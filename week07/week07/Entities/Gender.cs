@@ -9,6 +9,6 @@ namespace week07.Entities
     public enum Gender
     {
         Male=1,
-        Famale=2
+        Female=2
     }
 }
