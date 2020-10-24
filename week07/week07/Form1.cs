@@ -17,6 +17,7 @@ namespace week07
         List<Person> Population = new List<Person>();
         List<BirthProbablity> BirthProbabilities = new List<BirthProbablity>();
         List<DeatProbability> DeathProbabilities = new List<DeatProbability>();
+        Random rng = new Random(2346);
         public Form1()
         {
             InitializeComponent();
