@@ -17,29 +17,18 @@ namespace week07
         List<Person> Population = new List<Person>();
         List<BirthProbablity> BirthProbabilities = new List<BirthProbablity>();
         List<DeatProbability> DeathProbabilities = new List<DeatProbability>();
+        List<int> NbrOfMales = new List<int>();
+        List<int> NbrOfFemales = new List<int>();
         Random rng = new Random(1234);
         public Form1()
         {
             InitializeComponent();
-            Population= GetPopulation(@"C:\Temp\nép-teszt.csv");
+            //Population= GetPopulation(string.Format(@"{0}", textBox1.Text));
             BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
             DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
             //dataGridView1.DataSource = Population;
 
-            for (int year = 2005; year <= 2024; year++)
-            {
-                for (int i = 0; i < Population.Count; i++)
-                {
-                    Simstep(year, Population[i]);
-                }
-                int nbrOfMales = (from x in Population
-                                  where x.Gender == Gender.Male && x.IsAlive
-                                  select x).Count();
-                int nbrOfFemales = (from x in Population
-                                    where x.Gender == Gender.Female && x.IsAlive
-                                    select x).Count();
-                Console.WriteLine(string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
-            }
+            
 
         }
 
@@ -128,5 +117,55 @@ namespace week07
 
             return deathprobabilities;
         }
+        void Simulation()
+        {
+            for (int year = 2005; year <= numericUpDown1.Value; year++)
+            {
+                for (int i = 0; i < Population.Count; i++)
+                {
+                    Simstep(year, Population[i]);
+                }
+                int nbrOfMales = (from x in Population
+                                  where x.Gender == Gender.Male && x.IsAlive
+                                  select x).Count();
+                NbrOfMales.Add(nbrOfMales);
+                int nbrOfFemales = (from x in Population
+                                    where x.Gender == Gender.Female && x.IsAlive
+                                    select x).Count();
+                NbrOfFemales.Add(nbrOfFemales);
+                Console.WriteLine(string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+            }
+        }
+        void DisplayResults()
+        {
+            for (int year = 2005; year <= numericUpDown1.Value; year++)
+            {
+                richTextBox1.Text += "Szimulációs év: " + year +
+                                        "\n\t Fiúk: " + NbrOfMales[year-2005] +
+                                        "\n\t Lányok: " + NbrOfFemales[year-2005] + "\n\n";
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Population = GetPopulation(string.Format(@"{0}", textBox1.Text));
+            NbrOfFemales.Clear();
+            NbrOfMales.Clear();
+            richTextBox1.Clear();
+            Simulation();
+            DisplayResults();
+            
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog()==DialogResult.OK)
+            {
+                textBox1.Text = ofd.FileName;
+            }
+        }
+
+        
     }
 }
