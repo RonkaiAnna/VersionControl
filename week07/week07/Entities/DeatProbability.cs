@@ -9,7 +9,7 @@ namespace week07.Entities
     public class DeatProbability
     {
         public Gender Gender { get; set; }
-        public int Age { get; set; }
+        public byte Age { get; set; }
         public double DProbability { get; set; }
     }
 }

@@ -8,7 +8,7 @@ namespace week07.Entities
 {
     public class BirthProbablity
     {
-        public int Age { get; set; }
+        public byte Age { get; set; }
         public int NbrOfChildren { get; set; }
         public double BProbability { get; set; }
     }

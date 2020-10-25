@@ -24,13 +24,13 @@ namespace week07
             Population= GetPopulation(@"C:\Temp\nép-teszt.csv");
             BirthProbabilities = GetBirthProbabilities(@"C:\Temp\születés.csv");
             DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
-            dataGridView1.DataSource = Population;
+            //dataGridView1.DataSource = Population;
 
             for (int year = 2005; year <= 2024; year++)
             {
                 for (int i = 0; i < Population.Count; i++)
                 {
-                    //szimuláció magja
+                    Simstep(year, Population[i]);
                 }
                 int nbrOfMales = (from x in Population
                                   where x.Gender == Gender.Male && x.IsAlive
@@ -39,6 +39,31 @@ namespace week07
                                     where x.Gender == Gender.Female && x.IsAlive
                                     select x).Count();
                 Console.WriteLine(string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+            }
+
+        }
+
+        private void Simstep(int year, Person person)
+        {
+            if (!person.IsAlive) return;
+            byte age = (byte)(year - person.BirthYear);
+            double pDeath = (from x in DeathProbabilities
+                             where x.Gender == person.Gender && x.Age == age
+                             select x.DProbability).FirstOrDefault();
+            if (rng.NextDouble() <= pDeath) person.IsAlive = false;
+            if(person.IsAlive && person.Gender==Gender.Female)
+            {
+                double pBirth = (from x in BirthProbabilities
+                                 where x.Age == age
+                                 select x.BProbability).FirstOrDefault();
+                if (rng.NextDouble()<=pBirth)
+                {
+                    Person újszülött = new Person();
+                    újszülött.BirthYear = year;
+                    újszülött.NbrOfChildren = 0;
+                    újszülött.Gender = (Gender)(rng.Next(1, 3));
+                    Population.Add(újszülött);
+                }
             }
 
         }
@@ -73,7 +98,7 @@ namespace week07
                     var line = sr.ReadLine().Split(';');
                     birthprobabilities.Add(new BirthProbablity()
                     {
-                        Age=int.Parse(line[0]),
+                        Age=byte.Parse(line[0]),
                         NbrOfChildren = int.Parse(line[1]),
                         BProbability=double.Parse(line[2])
                     });
@@ -94,7 +119,7 @@ namespace week07
                     deathprobabilities.Add(new DeatProbability()
                     {
                         Gender = (Gender)Enum.Parse(typeof(Gender), line[0]),
-                        Age = int.Parse(line[1]),
+                        Age = byte.Parse(line[1]),
                         DProbability = double.Parse(line[2])
                     });
                 }
