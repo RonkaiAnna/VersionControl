@@ -21,8 +21,8 @@ namespace week08
         public IToyFactory Factory
         {
             get { return _factory; }
-            set 
-            { 
+            set
+            {
                 _factory = value;
                 DisplayNext();
             }
@@ -41,7 +41,7 @@ namespace week08
             var toy = Factory.CreateNew();
             _toys.Add(toy);
             toy.Left = -toy.Width;
-            
+
             mainPanel.Controls.Add(toy);
         }
 
@@ -51,12 +51,12 @@ namespace week08
             foreach (var toy in _toys)
             {
                 toy.MoveToy();
-                if (toy.Left>maxPosition)
+                if (toy.Left > maxPosition)
                 {
                     maxPosition = toy.Left;
                 }
             }
-            if (maxPosition>1000)
+            if (maxPosition > 1000)
             {
                 var oldestToy = _toys[0];
                 mainPanel.Controls.Remove(oldestToy);
@@ -78,9 +78,21 @@ namespace week08
         {
             if (_nextToy != null) Controls.Remove(_nextToy);
             _nextToy = Factory.CreateNew();
-            _nextToy.Top = label1.Top+label1.Height+20;
+            _nextToy.Top = label1.Top + label1.Height + 20;
             _nextToy.Left = label1.Left;
             Controls.Add(_nextToy);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+            var colorPicker = new ColorDialog();
+
+            colorPicker.Color = button.BackColor;
+            if (colorPicker.ShowDialog() != DialogResult.OK) return;
+
+            button.BackColor = colorPicker.Color;
+            
         }
     }
 }
