@@ -28,7 +28,7 @@ namespace week07
             DeathProbabilities = GetDeathProbabilities(@"C:\Temp\halál.csv");
             //dataGridView1.DataSource = Population;
 
-            
+
 
         }
 
@@ -40,12 +40,12 @@ namespace week07
                              where x.Gender == person.Gender && x.Age == age
                              select x.DProbability).FirstOrDefault();
             if (rng.NextDouble() <= pDeath) person.IsAlive = false;
-            if(person.IsAlive && person.Gender==Gender.Female)
+            if (person.IsAlive && person.Gender == Gender.Female)
             {
                 double pBirth = (from x in BirthProbabilities
                                  where x.Age == age
                                  select x.BProbability).FirstOrDefault();
-                if (rng.NextDouble()<=pBirth)
+                if (rng.NextDouble() <= pBirth)
                 {
                     Person újszülött = new Person();
                     újszülött.BirthYear = year;
@@ -60,7 +60,7 @@ namespace week07
         public List<Person> GetPopulation(string csvpath)
         {
             List<Person> population = new List<Person>();
-            using (StreamReader sr= new StreamReader(csvpath, Encoding.Default))
+            using (StreamReader sr = new StreamReader(csvpath, Encoding.Default))
             {
                 while (!sr.EndOfStream)
                 {
@@ -87,9 +87,9 @@ namespace week07
                     var line = sr.ReadLine().Split(';');
                     birthprobabilities.Add(new BirthProbablity()
                     {
-                        Age=byte.Parse(line[0]),
+                        Age = byte.Parse(line[0]),
                         NbrOfChildren = int.Parse(line[1]),
-                        BProbability=double.Parse(line[2])
+                        BProbability = double.Parse(line[2])
                     });
                 }
 
@@ -133,7 +133,7 @@ namespace week07
                                     where x.Gender == Gender.Female && x.IsAlive
                                     select x).Count();
                 NbrOfFemales.Add(nbrOfFemales);
-                Console.WriteLine(string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
+                Console. WriteLine(string.Format("Év:{0} Fiúk:{1} Lányok:{2}", year, nbrOfMales, nbrOfFemales));
             }
         }
         void DisplayResults()
@@ -141,8 +141,8 @@ namespace week07
             for (int year = 2005; year <= numericUpDown1.Value; year++)
             {
                 richTextBox1.Text += "Szimulációs év: " + year +
-                                        "\n\t Fiúk: " + NbrOfMales[year-2005] +
-                                        "\n\t Lányok: " + NbrOfFemales[year-2005] + "\n\n";
+                                        "\n\t Fiúk: " + NbrOfMales[year - 2005] +
+                                        "\n\t Lányok: " + NbrOfFemales[year - 2005] + "\n\n";
             }
         }
 
@@ -154,18 +154,18 @@ namespace week07
             richTextBox1.Clear();
             Simulation();
             DisplayResults();
-            
+
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            if (ofd.ShowDialog()==DialogResult.OK)
+            if (ofd.ShowDialog() == DialogResult.OK)
             {
                 textBox1.Text = ofd.FileName;
             }
         }
 
-        
+
     }
 }
